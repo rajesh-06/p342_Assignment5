@@ -122,6 +122,7 @@ def lux(a,B):
 	return(x)
 	
 	
+#for bracketing	
 def bracket(f,a,b):
 	if f(a) ==0:
 		print(a,'is the root of the equation.')
@@ -134,7 +135,8 @@ def bracket(f,a,b):
 			elif abs(f(a)) > abs(f(b)):
 				b=b+1.5*(b-a)
 	return a,b
-	
+
+#for finding a root using bisection method
 def bisection(f,a,b):
 	k=0
 	err=[]
@@ -155,7 +157,8 @@ def bisection(f,a,b):
 		print(i+1,'     ',arr[i])
 	
 	return c,arr
-	
+
+#for finding a root using false position method
 def fal_pos(f,a,b):
 	k=0
 	err=[]
@@ -177,13 +180,14 @@ def fal_pos(f,a,b):
 		print(i+1,'     ',arr[i])
 	return c, arr
 	
-def newtraph(f,f_,a):
+#for finding a root using Newton-raphson method
+def newtraph(f,a):
 	i=0
 	c=a
 	err=[]
 	print('SR.No.  Absolute error ')
 	while abs(f(c))>= 10**(-10) and i<200:
-		c = a - f(a)/f_(a)
+		c = a - f(a)/der1(f,a)
 		i+=1
 		a=c
 		err.append(c)
@@ -193,24 +197,28 @@ def newtraph(f,f_,a):
 		arr[i]=abs(err[i+1]-err[i])
 		print(i+1,'     ',arr[i])
 	return c,arr
-	
+
+#1st derivatives of a function	
 def der1(f,x):
 	h=10**(-3)
 	f_ = (f(x+h)-f(x-h))/(2*h)
 	return f_
 
+#2nd derivative of function
 def der2(f,x):
 	h=10**(-3)
 	f__ = (der(f,x+h)-der(f,x-h))/(2*h)
 	return f__
-	
+
+#Value of p(x)		
 def poly(f,x):
 	value=0
 	n = len(f)
 	for i in range(n):
 		value+=f[i]*(x**(n-1-i))
 	return value
-	
+
+#1st derivatives of p(x) at point x
 def der1_poly(f,x):
 	value=0
 	n= len(f)
@@ -218,6 +226,7 @@ def der1_poly(f,x):
 		value+=f[i]*(n-1-i)*(x**(n-i-2))
 	return value
 
+#2nd derivative of p(x) at a point x
 def der2_poly(f,x):
 	value=0
 	n=len(f)
@@ -225,20 +234,40 @@ def der2_poly(f,x):
 		value+=f[i]*(n-1-i)*(n-2-i)*(x**(n-i-3))
 	return value
 	
-def laguerre(f,x0):
-	h=10**(-6)
-	n=len(f)-1
+def laguerre(f,x):
+	h=10**(-8)#epsilon
+	n=len(f)-1#degree of polynomial
 	i=0
-	while poly(f,x0)>h and i>100:
-		g=der1_poly(f,x0)/poly(f,x0)
-		h=g**2-(der2_poly(f,x0)/poly(f,x0))
-		d1=g+(((n-1)(n*h-g**2))**0.5)
-		d2=g-(((n-1)(n*h-g**2))**0.5)
-		if abs(d1)>abs(d2):
-			a=n/d1
-		else:
-			a=n/d2
-		x0=x0-a
-		i+=1
-		print(i)
-	return x0
+	if abs(poly(f,x))<h: #checking
+		return x
+	else:
+		while abs(poly(f,x))>h and i<100:
+			g=der1_poly(f,x)/poly(f,x)
+			h=g**2-(der2_poly(f,x)/poly(f,x))
+			d1=g+(((n-1)*(n*h-g**2))**0.5)
+			d2=g-(((n-1)*(n*h-g**2))**0.5)
+			#denominator should be larger
+			if abs(d1)>abs(d2):
+				a=n/d1
+			else:
+				a=n/d2
+			x=x-a
+			i+=1#iteration number
+		return x
+
+#To find the root of polynomial using laguerre method
+def root_poly(q2):
+	deg = len(q2)-1#degree of polynomial
+	#matrix to store root
+	root = [0 for i in range(deg)]
+	for i in range(deg):
+		newp =[]
+		for j in range(deg+1-i):
+			newp.append(q2[j])
+		root[i] = laguerre(newp,5)
+		r=0
+		for j in range(deg-i):#Resizing the polynomial after synthetic devision
+			q2[j]+=r*(root[i])
+			r=q2[j]
+	return root
+
