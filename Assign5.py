@@ -1,119 +1,85 @@
 import mymodule as mm
 import math as m
-def q1a(x):
+def q1a(x):# Question 1(a)
 	f= m.log(x)-m.sin(x)
 	return f
 	
-def q1a1(x):
-	f= 1/x-m.cos(x)
-	return f
-	
-def q1b(x):
+def q1b(x):#Q.1(b)
 	f = -x-m.cos(x)
 	return f
 	
-def q1b1(x):
-	f = -1+m.sin(x)
-	return f	
-	
-def poly(f,x):
-	value=0
-	n = len(f)
-	for i in range(n):
-		value+=f[i]*(x**(n-1-i))
-	return value
-	
-def der1_poly(f,x):
-	value=0
-	n= len(f)
-	for i in range(n-1):
-		value+=f[i]*(n-1-i)*(x**(n-i-2))
-	return value
+#printing and storing iteration number and absolute error	
+def printing(arr):
+	f.write('Iteration number	Absolute Error\n')
+	for i in range(len(arr)):
+		f.write('\n')
+		f.write(str(i+1))
+		f.write('	')
+		f.write(str(arr[i]))
+	f.close()
 
-def der2_poly(f,x):
-	value=0
-	n=len(f)
-	for i in range(n-2):
-		value+=f[i]*(n-1-i)*(n-2-i)*(x**(n-i-3))
-	return value
+#Question 1(a)		
+print("Question 1(a)")	
+print('Give 2 number to bracket the roots')
+			
+a=float(input('lower bound: '))
+b=float(input('upper bound: '))
+a,b=mm.bracket(q1a,a,b)#bracketing the roots
+print('bracketing to',(a,b))
 
-		
-print("question 1a")				
-a=1
-b=2.5
-a,b=mm.bracket(q1a,a,b)
-print(a,b)
-
+#bisection
 c,arr1 = mm.bisection(q1a,a,b)
 f = open('q1a_bisection.txt', 'r+')
-f.write('Iteration number	Absolute Error\n')
-for i in range(len(arr1)):
-	f.write('\n')
-	f.write(str(i+1))
-	f.write('	')
-	f.write(str(arr1[i]))
-f.close()
+printing(arr1)
+print('Root between ',a,' and ',b,' is ',c)
 
-print(c)
-
+#false position
 d,arr2=mm.fal_pos(q1a,a,b)
-print(d)
-
+print('Root between ',a,' and ',b,' is ',d)
 f = open('q1a_fal_pos.txt', 'r+')
-f.write('Iteration number	Absolute Error\n')
-for i in range(len(arr2)):
-	f.write('\n')
-	f.write(str(i+1))
-	f.write('	')
-	f.write(str(arr2[i]))
-f.close()
+printing(arr2)
 
-
-e,arr3=mm.newtraph(q1a,q1a1,1.5)
-print(e)
+#newton raphson
+e,arr3=mm.newtraph(q1a,1.5)
+print('Root between ',a,' and ',b,' is ',e)
 f = open('q1a_newtraph.txt', 'r+')
-f.write('Iteration number	Absolute Error\n')
-for i in range(len(arr3)):
-	f.write('\n')
-	f.write(str(i+1))
-	f.write('	')
-	f.write(str(arr3[i]))
-f.close()
-	
-print("question 1b")				
-a=-1
-b=0
+printing(arr3)
+
+#-------------------------------
+#Question 1(b)
+print("\nQuestion 1(b)")				
+print('Give 2 number to bracket the roots')
+a=float(input('Lower bound: '))
+b=float(input('Upper bound: '))
 a,b=mm.bracket(q1b,a,b)
-print(a,b)
+print('Bracketing to',(a,b))
+
+#bisection
 c,arr4 = mm.bisection(q1b,a,b)
-print(c)
+print('Root between ',a,' and ',b,' is ',c)
 f = open('q1b_bisection.txt', 'r+')
-f.write('Iteration number	Absolute Error\n')
-for i in range(len(arr4)):
-	f.write('\n')
-	f.write(str(i+1))
-	f.write('	')
-	f.write(str(arr4[i]))
-f.close()
+printing(arr4)
 
+#false position
 d,arr5=mm.fal_pos(q1b,a,b)
-print(d)
+print('Root between ',a,' and ',b,' is ',d)
 f = open('q1b_fal_pos.txt', 'r+')
-f.write('Iteration number	Absolute Error\n')
-for i in range(len(arr5)):
-	f.write('\n')
-	f.write(str(i+1))
-	f.write('	')
-	f.write(str(arr5[i]))
-f.close()
+printing(arr5)
 
-e,arr6=mm.newtraph(q1b,q1b1,0)
-print(e)
+#newton raphson
+e,arr6=mm.newtraph(q1b,0)
+print('Root between ',a,' and ',b,' is ',e)
 f = open('q1b_newtraph.txt', 'r+')
-f.write('Iteration number	Absolute Error\n')
-for i in range(len(arr6)):
-	f.write('\n')
-	f.write(str(i+1))
-	f.write('	')
-	f.write(str(arr6[i]))
-f.close()
+printing(arr6)
+
+#-------------------------------
+#Question 2
+print('\nQuestion 2')
+#q2= [1,-3,-7,27,-18]
+#coefficient should be in order x^n to x^0
+with open('q2.txt', 'r') as f:
+	for line in f:
+		q2=[float(num) for num in line.split(',')]
+
+print('Roots of the polynomial are: ',mm.root_poly(q2))
+
